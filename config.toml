@@ -5,3 +5,14 @@ shutdown_timeout = 0
 
 [session_server]
   session_timeout = 1800
+
+[[runners]]
+  name = "railway-runner"
+  url = "${CI_SERVER_URL}"
+  token = "${RUNNER_TOKEN}"
+  executor = "docker"
+  [runners.docker]
+    host = "unix:///var/run/docker.sock"
+    image = "alpine:latest"
+    privileged = true
+    pull_policy = "if-not-present"
