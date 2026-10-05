@@ -10,9 +10,13 @@ shutdown_timeout = 0
   name = "railway-runner"
   url = "${CI_SERVER_URL}"
   token = "${RUNNER_TOKEN}"
-  executor = "docker"
-  [runners.docker]
-    host = "unix:///var/run/docker.sock"
-    image = "alpine:latest"
-    privileged = true
-    pull_policy = "if-not-present"
+  # GitLab Runner has no built-in "kaniko" executor. The shell executor runs
+  # job scripts in this container, where /kaniko/executor is installed.
+  executor = "shell"
+  shell = "bash"
+  # Kaniko layer cache settings, available to jobs as environment variables.
+  # Use them in a job, e.g.:
+  #   /kaniko/executor --context "$CI_PROJECT_DIR" --dockerfile Dockerfile \
+  #     --destination "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" \
+  #     --cache=$KANIKO_CACHE_ENABLED --cache-dir=$KANIKO_CACHE_DIR
+  environment = ["KANIKO_CACHE_ENABLED=true", "KANIKO_CACHE_DIR=/kaniko/cache"]
