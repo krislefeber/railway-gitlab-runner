@@ -1,7 +1,7 @@
 FROM gitlab/gitlab-runner:latest
 
 # Install Docker CLI
-RUN apk add --no-cache docker
+RUN apt-get update && apt-get install -y docker.io && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /etc/gitlab-runner
 
